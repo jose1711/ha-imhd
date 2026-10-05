@@ -1,0 +1,110 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "imhd.sk odchody",
+        "description": "Čo chceš pridať?",
+        "menu_options": {
+          "stop": "Zastávku so senzormi odchodov",
+          "action": "Iba akciu na jednorazové načítanie odchodov"
+        }
+      },
+      "action": {
+        "title": "Akcia na načítanie odchodov",
+        "description": "Sprístupní akciu „imhd.sk odchody: Načítať odchody“ (imhd_sk.get_departures), ktorá na požiadanie stiahne odchody z ľubovoľnej zastávky a vráti ich do skriptu alebo automatizácie. Nevytvorí žiadne entity.\n\nAkcia je dostupná aj vtedy, keď máš pridanú aspoň jednu zastávku."
+      },
+      "stop": {
+        "title": "Pridať zastávku",
+        "description": "Vyber zastávku a spôsob, akým sa majú odchody aktualizovať.",
+        "data": {
+          "stop": "Zastávka",
+          "name": "Názov",
+          "mode": "Spôsob aktualizácie",
+          "lines": "Linky",
+          "max_departures": "Počet odchodov v zozname",
+          "platform_sensors": "Senzor pre každé nástupište",
+          "line_sensors": "Senzor pre každú linku a smer"
+        },
+        "data_description": {
+          "stop": "Vyber zo zoznamu (najbližšie k domovu sú hore, dá sa písať a hľadať), alebo vlož odkaz na zastávku z imhd.sk, prípadne číslo zastávky.",
+          "name": "Názov zariadenia v Home Assistante. Ak ho necháš prázdny, použije sa názov zastávky.",
+          "mode": "Priebežne: trvalé spojenie, zmeny sa prejavia hneď. Pravidelne: stiahne tabuľu raz za niekoľko minút. Na požiadanie: nesťahuje nič samo, len po stlačení tlačidla Obnoviť alebo cez akciu „Aktualizovať entitu“.",
+          "lines": "Čísla liniek oddelené čiarkou, napr. 61, 96. Obmedzí odchody aj to, pre ktoré linky vzniknú senzory. Prázdne znamená všetky linky.",
+          "max_departures": "Koľko nasledujúcich odchodov bude v atribúte „departures“ každého senzora.",
+          "platform_sensors": "Najbližší odchod z každého nástupišťa (A, B…), teda z každého smeru zvlášť.",
+          "line_sensors": "Najbližší odchod každej linky v každom smere, napr. „Linka 96 · A“."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Z imhd.sk neprišli pre túto zastávku žiadne odchody. Skontroluj zastávku alebo to skús neskôr.",
+      "invalid_stop": "Zastávku sa nepodarilo rozpoznať. Vyber ju zo zoznamu, vlož odkaz na zastávku z imhd.sk alebo jej číslo."
+    },
+    "abort": {
+      "already_configured": "Táto zastávka už je pridaná."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nastavenia zastávky",
+        "description": "Spôsob aktualizácie sa tu zmeniť nedá. Na jeho zmenu zastávku odstráň a pridaj znova.",
+        "data": {
+          "lines": "Linky",
+          "max_departures": "Počet odchodov v zozname",
+          "platform_sensors": "Senzor pre každé nástupište",
+          "line_sensors": "Senzor pre každú linku a smer",
+          "scan_interval": "Interval sťahovania"
+        },
+        "data_description": {
+          "lines": "Čísla liniek oddelené čiarkou, napr. 61, 96. Prázdne znamená všetky linky.",
+          "max_departures": "Koľko nasledujúcich odchodov bude v atribúte „departures“ každého senzora.",
+          "platform_sensors": "Najbližší odchod z každého nástupišťa (A, B…), teda z každého smeru zvlášť.",
+          "line_sensors": "Najbližší odchod každej linky v každom smere, napr. „Linka 96 · A“.",
+          "scan_interval": "Ako často sa má tabuľa stiahnuť, v minútach (1–60)."
+        }
+      }
+    }
+  },
+  "selector": {
+    "mode": {
+      "options": {
+        "push": "Priebežne (trvalé spojenie)",
+        "poll": "Pravidelne (raz za niekoľko minút)",
+        "manual": "Na požiadanie (iba manuálne)"
+      }
+    }
+  },
+  "services": {
+    "get_departures": {
+      "name": "Načítať odchody",
+      "description": "Jednorazovo stiahne online tabuľu zastávky z imhd.sk a vráti nasledujúce odchody.",
+      "fields": {
+        "stop_id": {
+          "name": "Zastávka",
+          "description": "Číslo zastávky (napr. 341) alebo odkaz na zastávku či online tabuľu z imhd.sk."
+        },
+        "lines": {
+          "name": "Linky",
+          "description": "Čísla liniek oddelené čiarkou, napr. 61, 96. Prázdne znamená všetky."
+        },
+        "platforms": {
+          "name": "Nástupištia",
+          "description": "Interné čísla nástupíšť oddelené čiarkou, napr. 837. Ich zoznam aj s cieľmi vracia odpoveď v poli „platforms“."
+        },
+        "limit": {
+          "name": "Počet odchodov",
+          "description": "Najviac toľko odchodov sa vráti."
+        },
+        "timeout": {
+          "name": "Časový limit",
+          "description": "Najdlhší čas v sekundách, ktorý môže načítanie trvať."
+        },
+        "settle": {
+          "name": "Čakanie na doplnenie",
+          "description": "Nástupištia chodia postupne. Tabuľa sa považuje za úplnú, keď toľko sekúnd nepríde nič nové. Ak chýbajú spoje, zvýš."
+        }
+      }
+    }
+  }
+}

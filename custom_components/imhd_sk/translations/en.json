@@ -1,0 +1,110 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "imhd.sk departures",
+        "description": "What do you want to add?",
+        "menu_options": {
+          "stop": "A stop with departure sensors",
+          "action": "Only the action for one-off departure lookups"
+        }
+      },
+      "action": {
+        "title": "Departure lookup action",
+        "description": "Makes the “imhd.sk departures: Get departures” action (imhd_sk.get_departures) available. It fetches departures for any stop on request and returns them to a script or automation. No entities are created.\n\nThe action is also available whenever at least one stop is configured."
+      },
+      "stop": {
+        "title": "Add a stop",
+        "description": "Pick a stop and how its departures should be updated.",
+        "data": {
+          "stop": "Stop",
+          "name": "Name",
+          "mode": "Update method",
+          "lines": "Lines",
+          "max_departures": "Departures in the list",
+          "platform_sensors": "Sensor per platform",
+          "line_sensors": "Sensor per line and direction"
+        },
+        "data_description": {
+          "stop": "Pick from the list (nearest to home first, type to search), or paste an imhd.sk stop link or the stop number.",
+          "name": "Device name in Home Assistant. Leave empty to use the stop name.",
+          "mode": "Live: persistent connection, changes show up immediately. Periodic: downloads the board every few minutes. On request: never fetches on its own, only via the Refresh button or the “Update entity” action.",
+          "lines": "Line numbers separated by commas, e.g. 61, 96. Limits departures and which lines get sensors. Empty means all lines.",
+          "max_departures": "How many upcoming departures go into each sensor's “departures” attribute.",
+          "platform_sensors": "Next departure from each platform (A, B…), i.e. each direction separately.",
+          "line_sensors": "Next departure of each line in each direction, e.g. “Linka 96 · A”."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "imhd.sk returned no departures for this stop. Check the stop or try again later.",
+      "invalid_stop": "The stop could not be recognised. Pick it from the list, paste an imhd.sk stop link or its number."
+    },
+    "abort": {
+      "already_configured": "This stop is already added."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Stop settings",
+        "description": "The update method can't be changed here. To change it, remove the stop and add it again.",
+        "data": {
+          "lines": "Lines",
+          "max_departures": "Departures in the list",
+          "platform_sensors": "Sensor per platform",
+          "line_sensors": "Sensor per line and direction",
+          "scan_interval": "Download interval"
+        },
+        "data_description": {
+          "lines": "Line numbers separated by commas, e.g. 61, 96. Empty means all lines.",
+          "max_departures": "How many upcoming departures go into each sensor's “departures” attribute.",
+          "platform_sensors": "Next departure from each platform (A, B…), i.e. each direction separately.",
+          "line_sensors": "Next departure of each line in each direction, e.g. “Linka 96 · A”.",
+          "scan_interval": "How often to download the board, in minutes (1–60)."
+        }
+      }
+    }
+  },
+  "selector": {
+    "mode": {
+      "options": {
+        "push": "Live (persistent connection)",
+        "poll": "Periodic (every few minutes)",
+        "manual": "On request (manual only)"
+      }
+    }
+  },
+  "services": {
+    "get_departures": {
+      "name": "Get departures",
+      "description": "Downloads the imhd.sk live board of a stop once and returns upcoming departures.",
+      "fields": {
+        "stop_id": {
+          "name": "Stop",
+          "description": "Stop number (e.g. 341) or an imhd.sk stop / live board link."
+        },
+        "lines": {
+          "name": "Lines",
+          "description": "Line numbers separated by commas, e.g. 61, 96. Empty means all."
+        },
+        "platforms": {
+          "name": "Platforms",
+          "description": "Internal platform numbers separated by commas, e.g. 837. The response lists them with destinations under “platforms”."
+        },
+        "limit": {
+          "name": "Number of departures",
+          "description": "At most this many departures are returned."
+        },
+        "timeout": {
+          "name": "Time limit",
+          "description": "Maximum time in seconds the lookup may take."
+        },
+        "settle": {
+          "name": "Wait for completion",
+          "description": "Platforms arrive one by one. The board is considered complete once nothing new arrives for this many seconds. Increase if departures are missing."
+        }
+      }
+    }
+  }
+}
